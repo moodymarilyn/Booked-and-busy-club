@@ -101,7 +101,7 @@ async function signOut() {
 /* ---------- data ---------- */
 
 const BOOK_COLS =
-  "id, ol_work_id, title, author, cover_url, subjects, blurb, status, created_at, finished_at";
+  "id, gb_volume_id, title, author, cover_url, subjects, blurb, status, created_at, finished_at";
 
 async function refresh() {
   const [books, stats, votes, reads, count] = await Promise.all([
@@ -288,7 +288,7 @@ async function markFinished(bookId) {
   await refresh();
 }
 
-/* ---------- add a recommendation (Open Library) ---------- */
+/* ---------- add a recommendation (Google Books) ---------- */
 
 let searchTimer = null;
 let selectedResult = null;
@@ -299,40 +299,54 @@ function initSearch() {
     clearTimeout(searchTimer);
     const q = input.value.trim();
     if (q.length < 3) { show("search-results", false); return; }
-    searchTimer = setTimeout(() => searchOpenLibrary(q), 350);
+    searchTimer = setTimeout(() => searchGoogleBooks(q), 350);
   });
 }
 
-async function searchOpenLibrary(q) {
-  const url = "https://openlibrary.org/search.json?limit=8" +
-    "&fields=key,title,author_name,cover_i,first_publish_year,subject" +
+function coverFrom(volumeInfo, size) {
+  const links = volumeInfo.imageLinks || {};
+  const url = size === "S" ? (links.smallThumbnail || links.thumbnail)
+                           : (links.thumbnail || links.smallThumbnail);
+  return url ? url.replace(/^http:/, "https:") : null;
+}
+
+async function searchGoogleBooks(q) {
+  const url = "https://www.googleapis.com/books/v1/volumes?maxResults=8&printType=books" +
+    "&fields=items(id,volumeInfo(title,authors,publishedDate,categories,imageLinks))" +
     "&q=" + encodeURIComponent(q);
   let json;
   try {
     const res = await fetch(url);
     json = await res.json();
   } catch {
-    $("#add-msg").textContent = "Open Library search failed — try again.";
+    $("#add-msg").textContent = "Google Books search failed — try again.";
     return;
   }
+  const items = json.items || [];
   const list = $("#search-results");
-  list.innerHTML = (json.docs || []).map((d, i) => `
+  list.innerHTML = items.map((d, i) => {
+    const v = d.volumeInfo || {};
+    const cover = coverFrom(v, "S");
+    const year = (v.publishedDate || "").slice(0, 4);
+    return `
     <li data-i="${i}">
-      ${d.cover_i ? `<img src="https://covers.openlibrary.org/b/id/${d.cover_i}-S.jpg" alt="">` : "<span class='mini-cover'>📕</span>"}
-      <span>${esc(d.title)} — ${esc((d.author_name || []).join(", ") || "Unknown")}
-        ${d.first_publish_year ? `(${d.first_publish_year})` : ""}</span>
-    </li>`).join("");
+      ${cover ? `<img src="${esc(cover)}" alt="">` : "<span class='mini-cover'>📕</span>"}
+      <span>${esc(v.title)} — ${esc((v.authors || []).join(", ") || "Unknown")}
+        ${year ? `(${year})` : ""}</span>
+    </li>`;
+  }).join("");
   show("search-results", list.children.length > 0);
   list.querySelectorAll("li").forEach((li) =>
-    li.addEventListener("click", () => selectResult(json.docs[Number(li.dataset.i)])));
+    li.addEventListener("click", () => selectResult(items[Number(li.dataset.i)])));
 }
 
 function selectResult(doc) {
   show("search-results", false);
-  const workId = doc.key.replace("/works/", "");
+  const volumeId = doc.id;
+  const v = doc.volumeInfo || {};
 
   // Duplicates impossible: if it's already in the pool, offer to upvote instead.
-  const existing = state.books.find((b) => b.ol_work_id === workId);
+  const existing = state.books.find((b) => b.gb_volume_id === volumeId);
   if (existing) {
     show("add-form", false);
     $("#add-msg").innerHTML =
@@ -349,11 +363,11 @@ function selectResult(doc) {
   }
 
   selectedResult = {
-    ol_work_id: workId,
-    title: doc.title,
-    author: (doc.author_name || []).join(", ") || null,
-    cover_url: doc.cover_i ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg` : null,
-    subjects: (doc.subject || []).slice(0, 6),
+    gb_volume_id: volumeId,
+    title: v.title,
+    author: (v.authors || []).join(", ") || null,
+    cover_url: coverFrom(v, "M"),
+    subjects: (v.categories || []).slice(0, 6),
   };
   $("#add-msg").textContent = "";
   $("#add-preview").innerHTML = `

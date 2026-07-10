@@ -13,7 +13,7 @@ create table public.members (
 
 create table public.books (
   id          uuid primary key default gen_random_uuid(),
-  ol_work_id  text not null unique,            -- Open Library work ID => duplicates impossible
+  gb_volume_id text not null unique,           -- Google Books volume ID => duplicates impossible
   title       text not null,
   author      text,
   cover_url   text,
@@ -136,10 +136,10 @@ revoke all on public.books   from public, anon, authenticated;
 revoke all on public.votes   from public, anon, authenticated;
 revoke all on public.reads   from public, anon, authenticated;
 
-grant select (id, ol_work_id, title, author, cover_url, subjects, blurb,
+grant select (id, gb_volume_id, title, author, cover_url, subjects, blurb,
               status, created_at, finished_at)
   on public.books to authenticated;
-grant insert (ol_work_id, title, author, cover_url, subjects, blurb)
+grant insert (gb_volume_id, title, author, cover_url, subjects, blurb)
   on public.books to authenticated;   -- status & added_by come from defaults
 grant update (status, finished_at)
   on public.books to authenticated;

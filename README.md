@@ -36,7 +36,7 @@ The DB stores who recommended/voted/read what (needed for one-vote-per-person an
 ## Known quirks
 
 - **Free-tier pausing:** Supabase pauses projects after ~1 week of inactivity. Un-pause from the dashboard when it happens, or set up a weekly keep-alive (e.g. a GitHub Action that curls `{SUPABASE_URL}/rest/v1/` with the anon key on a cron schedule).
-- **Open Library search** can be weak for obscure titles; try adding the author's name to the query.
+- **Book search** uses the Google Books API (free, keyless, fair-use quotas). Each edition is a separate volume, so the same book can occasionally appear more than once in results — pick the edition you want.
 - **Race conditions** (two people accepting a lottery pick at once) are handled by the database — one wins, the other gets a friendly error.
 
 ## v2 parking lot
