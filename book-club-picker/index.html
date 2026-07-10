@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Club Picker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="main">
+  <header class="site-header">
+    <h1>📚 Book Club Picker</h1>
+    <nav>
+      <a href="archive.html">Books we've read</a>
+      <button id="signout-btn" class="link-btn hidden">Sign out</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Loading -->
+    <section id="loading" class="panel center">Loading…</section>
+
+    <!-- Login -->
+    <section id="login" class="panel hidden">
+      <h2>Sign in</h2>
+      <p>Enter your email and we'll send you a magic link.</p>
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="you@example.com" required>
+        <button type="submit" class="btn primary">Send magic link</button>
+      </form>
+      <p id="login-msg" class="muted"></p>
+    </section>
+
+    <!-- Not on the allowlist -->
+    <section id="not-member" class="panel hidden">
+      <h2>Sorry, members only</h2>
+      <p>Your email (<span id="nm-email"></span>) isn't on the club list.
+         Ask whoever runs the club to add you.</p>
+      <button id="nm-signout" class="btn">Sign out</button>
+    </section>
+
+    <!-- App -->
+    <section id="app" class="hidden">
+
+      <!-- Current read -->
+      <div id="current-read" class="hidden">
+        <h2>📖 Current read</h2>
+        <div id="current-card"></div>
+      </div>
+
+      <!-- Lottery -->
+      <div id="lottery" class="panel">
+        <button id="choose-btn" class="btn primary big">🎲 Choose next read</button>
+        <p class="muted small">Weighted by score — anyone can press, nothing happens until Accept.</p>
+        <div id="candidate" class="hidden">
+          <h3>The wheel says…</h3>
+          <div id="candidate-card"></div>
+          <div class="btn-row">
+            <button id="accept-btn" class="btn primary">✅ Accept</button>
+            <button id="spin-btn" class="btn">🔄 Spin again</button>
+            <button id="cancel-spin-btn" class="btn subtle">Cancel</button>
+          </div>
+        </div>
+        <p id="lottery-msg" class="muted"></p>
+      </div>
+
+      <!-- Add a recommendation -->
+      <div class="panel">
+        <h2>➕ Add a recommendation</h2>
+        <input type="text" id="search-input" placeholder="Search for a book by title or author…" autocomplete="off">
+        <ul id="search-results" class="hidden"></ul>
+        <div id="add-form" class="hidden">
+          <div id="add-preview"></div>
+          <textarea id="add-blurb" maxlength="280" rows="2"
+            placeholder="Anonymous pitch (optional): why should we read this?"></textarea>
+          <div class="btn-row">
+            <button id="add-confirm-btn" class="btn primary">Add to pool</button>
+            <button id="add-cancel-btn" class="btn subtle">Cancel</button>
+          </div>
+        </div>
+        <p id="add-msg" class="muted"></p>
+      </div>
+
+      <!-- Pool -->
+      <div>
+        <h2>🏆 The pool</h2>
+        <p class="muted small">score = upvotes − downvotes − members who've read it</p>
+        <div id="pool-list"></div>
+        <p id="pool-empty" class="muted hidden">Nothing here yet — add the first recommendation!</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

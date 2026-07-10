@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Books we've read — Book Club Picker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="archive">
+  <header class="site-header">
+    <h1>📚 Books we've read</h1>
+    <nav>
+      <a href="index.html">← Back to the pool</a>
+      <button id="signout-btn" class="link-btn hidden">Sign out</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="loading" class="panel center">Loading…</section>
+
+    <section id="login" class="panel hidden">
+      <h2>Sign in</h2>
+      <p>Enter your email and we'll send you a magic link.</p>
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="you@example.com" required>
+        <button type="submit" class="btn primary">Send magic link</button>
+      </form>
+      <p id="login-msg" class="muted"></p>
+    </section>
+
+    <section id="not-member" class="panel hidden">
+      <h2>Sorry, members only</h2>
+      <p>Your email (<span id="nm-email"></span>) isn't on the club list.</p>
+      <button id="nm-signout" class="btn">Sign out</button>
+    </section>
+
+    <section id="app" class="hidden">
+      <div id="archive-list"></div>
+      <p id="archive-empty" class="muted hidden">No finished books yet. Get reading!</p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
