@@ -3,4 +3,7 @@
 window.BCP_CONFIG = {
   SUPABASE_URL: "https://riyecpxxjjkghfusntat.supabase.co",
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpeWVjcHh4amprZ2hmdXNudGF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2NDcyNTYsImV4cCI6MjA5OTIyMzI1Nn0.iHc3qFaxV7qfUex0ymYcqpmWRl9Z7FXi8N4Fo1QOg1c",
+  // Google Books API key (recommended — keyless access shares a flaky public
+  // quota). Free at console.cloud.google.com; restrict it to your site's URL.
+  GOOGLE_BOOKS_API_KEY: "AIzaSyCZX4_7-W8IKIu0YoFAstDoGmADN7YqRKk",
 };

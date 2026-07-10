@@ -36,7 +36,8 @@ The DB stores who recommended/voted/read what (needed for one-vote-per-person an
 ## Known quirks
 
 - **Free-tier pausing:** Supabase pauses projects after ~1 week of inactivity. Un-pause from the dashboard when it happens, or set up a weekly keep-alive (e.g. a GitHub Action that curls `{SUPABASE_URL}/rest/v1/` with the anon key on a cron schedule).
-- **Book search** uses the Google Books API (free, keyless, fair-use quotas). Each edition is a separate volume, so the same book can occasionally appear more than once in results — pick the edition you want.
+- **Book search** uses the Google Books API. Keyless access shares a public quota that's often exhausted, so get your own free key: [console.cloud.google.com](https://console.cloud.google.com) → create a project → enable **Books API** → Credentials → **Create API key** → under "Application restrictions" pick **Websites** and add `https://moodymarilyn.github.io/*` → paste the key into `js/config.js` (`GOOGLE_BOOKS_API_KEY`). That gives 1,000 searches/day. The referrer restriction makes the key safe to publish.
+- Each Google Books edition is a separate volume, so the same book can occasionally appear more than once in results — pick the edition you want.
 - **Race conditions** (two people accepting a lottery pick at once) are handled by the database — one wins, the other gets a friendly error.
 
 ## v2 parking lot

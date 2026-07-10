@@ -313,6 +313,8 @@ function coverFrom(volumeInfo, size) {
 async function searchGoogleBooks(q) {
   const url = "https://www.googleapis.com/books/v1/volumes?maxResults=8&printType=books" +
     "&fields=items(id,volumeInfo(title,authors,publishedDate,categories,imageLinks))" +
+    (window.BCP_CONFIG.GOOGLE_BOOKS_API_KEY
+      ? "&key=" + encodeURIComponent(window.BCP_CONFIG.GOOGLE_BOOKS_API_KEY) : "") +
     "&q=" + encodeURIComponent(q);
   let json;
   try {
@@ -322,6 +324,14 @@ async function searchGoogleBooks(q) {
     $("#add-msg").textContent = "Google Books search failed — try again.";
     return;
   }
+  if (json.error) {
+    $("#add-msg").textContent = json.error.status === "RESOURCE_EXHAUSTED"
+      ? "Google Books quota hit — add an API key in config.js (see README) or try again later."
+      : "Google Books error: " + (json.error.message || "unknown");
+    show("search-results", false);
+    return;
+  }
+  $("#add-msg").textContent = "";
   const items = json.items || [];
   const list = $("#search-results");
   list.innerHTML = items.map((d, i) => {
