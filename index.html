@@ -3,15 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Book Club Picker</title>
+  <title>book club picker — booked &amp; busy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Special+Elite&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="main">
   <header class="site-header">
-    <h1>📚 Book Club Picker</h1>
+    <span class="tape" style="top:8px; left:calc(50% - 280px); width:90px; transform: rotate(-8deg);"></span>
+    <span class="tape" style="top:14px; right:calc(50% - 300px); width:70px; background:var(--washi-yellow); transform: rotate(6deg);"></span>
+    <div class="torn-tag">booked &amp; busy club</div>
+    <h1>book club picker</h1>
+    <div class="tagline">— what are we reading next? —</div>
     <nav>
-      <a href="archive.html">Books we've read</a>
-      <button id="signout-btn" class="link-btn hidden">Sign out</button>
+      <a href="archive.html">books we've read</a>
+      <button id="signout-btn" class="link-btn hidden">sign out</button>
     </nav>
   </header>
 
@@ -43,16 +49,16 @@
 
       <!-- Current read -->
       <div id="current-read" class="hidden">
-        <h2>📖 Current read</h2>
+        <h2>current read</h2>
         <div id="current-card"></div>
       </div>
 
       <!-- Lottery -->
       <div id="lottery" class="panel">
-        <button id="choose-btn" class="btn primary big">🎲 Choose next read</button>
+        <button id="choose-btn" class="btn primary big">🎲 choose next read</button>
         <p class="muted small">Weighted by score — anyone can press, nothing happens until Accept.</p>
         <div id="candidate" class="hidden">
-          <h3>The wheel says…</h3>
+          <h3 class="handwriting">the wheel says…</h3>
           <div id="candidate-card"></div>
           <div class="btn-row">
             <button id="accept-btn" class="btn primary">✅ Accept</button>
@@ -65,7 +71,7 @@
 
       <!-- Add a recommendation -->
       <div class="panel">
-        <h2>➕ Add a recommendation</h2>
+        <h2>add a recommendation</h2>
         <input type="text" id="search-input" placeholder="Search for a book by title or author…" autocomplete="off">
         <ul id="search-results" class="hidden"></ul>
         <div id="add-form" class="hidden">
@@ -82,13 +88,18 @@
 
       <!-- Pool -->
       <div>
-        <h2>🏆 The pool</h2>
-        <p class="muted small">score = upvotes − downvotes − members who've read it</p>
+        <h2>the pool</h2>
+        <p class="muted small typewriter">score = upvotes − downvotes − members who've read it</p>
         <div id="pool-list"></div>
         <p id="pool-empty" class="muted hidden">Nothing here yet — add the first recommendation!</p>
       </div>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="handwriting">booked &amp; busy</div>
+    <div class="typewriter">xoxo, keep turning pages</div>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
